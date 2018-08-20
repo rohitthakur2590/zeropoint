@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 
 from lxml.etree import XMLSyntaxError
@@ -35,7 +35,10 @@ flask uses UserMixin to injectsome extra thing to user
 
 class User(UserMixin, db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	username = db.Column(db.String(15), unique=True)
+	firstname = db.Column(db.String(20))
+	lastname = db.Column(db.String(20))
+	username = db.Column(db.String(50), unique=True)
+	image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
 	email = db.Column(db.String(50), unique=True)
 	password = db.Column(db.String(80))
 @login_manager.user_loader
@@ -46,15 +49,35 @@ def load_user(user_id):
 
 #Login Form
 class LoginForm(FlaskForm):
-      username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+      email = StringField('email', validators=[InputRequired(), Length(min=4, max=50)])
       password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
       remember = BooleanField('remember me')
 
 #Register Form
-class RegisterForm(FlaskForm):
-      email = StringField('email', validators=[InputRequired(), Email(message = 'Invalid email'), Length(max=50)])
-      username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
-      password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+class RegisterForm(FlaskForm): 
+      firstname = StringField('First name', validators=[InputRequired(), Length(min=1, max=20)])
+      lastname = StringField('Last name', validators=[InputRequired(), Length(min=1, max=20)])
+      email = StringField('Email-Id', validators=[InputRequired(), Email(message = 'Invalid email'), Length(max=50)])
+      password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
+
+class UpdateProfileForm(FlaskForm): 
+      firstname = StringField('First name', validators=[InputRequired(), Length(min=1, max=20)])
+      lastname = StringField('Last name', validators=[InputRequired(), Length(min=1, max=20)])
+      username = StringField('Username', validators=[InputRequired(), Length(min=1, max=20)])
+      email = StringField('Email-Id', validators=[InputRequired(), Email(message = 'Invalid email'), Length(max=50)])
+      submit = SubmitField('Update')
+
+      def validate_username(self, username):
+      	if username.data != current_user.username:
+      		user = User.query.filter_by(username=username.data).first()
+      		if user:
+      			raise ValidationError('username is already taken')
+
+      def validate_email(self, email):
+      	if email.data != current_user.email:
+      		user = User.query.filter_by(username=email.data).first()
+      		if user:
+      			raise ValidationError('email account already exist')
 
 class CommandToSendForm(Form):
         fixedXmlString = TextAreaField("Fixed XML String",render_kw={'class': 'form-control','readonly': True})
@@ -75,13 +98,13 @@ def login():
 
 	if form.validate_on_submit():
 		#looking for user in database
-		user = User.query.filter_by(username=form.username.data).first()
+		user = User.query.filter_by(email=form.email.data).first()
 		if user:
 			if check_password_hash(user.password, form.password.data):
 				login_user(user, remember=form.remember.data)
 				return redirect(url_for('dashboard'))
-
-		return '<h1>Invalid username or password</h1>'
+		flash('Invalid username or password!', category='danger')
+		return render_template('login.html', form=form)
 		#return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
 	return render_template('login.html', form=form)
 '''
@@ -93,11 +116,15 @@ def signup():
 
  	if form.validate_on_submit():
  		hash_password = generate_password_hash(form.password.data, method='sha256')
- 		new_user = User(username=form.username.data, email=form.email.data, password=hash_password)
+ 		new_user = User(firstname=form.firstname.data, 
+ 			            lastname=form.lastname.data,
+ 			            email=form.email.data, 
+ 			            password=hash_password)
+
  		db.session.add(new_user)
  		db.session.commit()
-
- 		return '<h1>You Have Registered Successfully!</h1>'
+ 		flash(f'Sign Up successful for {form.firstname.data}!', 'success')
+ 		return render_template('index.html')
  		#return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
 
  	return render_template('signup.html', form=form)
@@ -144,7 +171,35 @@ def parse_buttons():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-	return render_template('dashboard.html', name=current_user.username)	
+	return render_template('dashboard.html', name=current_user.firstname)	
+
+
+@app.route('/profile')
+@login_required
+def profile():
+	form = UpdateProfileForm()
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)	
+	return render_template('profile.html', name=current_user.firstname, image_file=img_file, form=form)	
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+	form = UpdateProfileForm()
+	if form.validate_on_submit():
+		current_user.firstname = form.firstname.data
+		current_user.lastname = form.lastname.data
+		current_user.username = form.username.data
+		current_user.email= form.email.data
+		db.session.commit()
+		flash('Profile Updated Successfully', 'success')
+		return redirect(url_for('profile'))
+	elif request.method == 'GET':
+		form.firstname.data = current_user.firstname
+		form.lastname.data = current_user.lastname
+		form.username.data = current_user.username
+		form.email.data = current_user.email
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)	
+	return render_template('edit_profile.html', name=current_user.firstname, image_file=img_file, form=form)	
 
 @app.route('/logout')
 @login_required
