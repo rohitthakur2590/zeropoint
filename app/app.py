@@ -110,7 +110,7 @@ class OutputForm(Form):
 class PostForm(FlaskForm):
 	title = StringField('Title', validators=[DataRequired()])
 	content = TextAreaField('Content', validators=[DataRequired()])
-	submit = SubmitField('Post')
+	#submit = SubmitField('Post')
 
 
 
@@ -250,10 +250,11 @@ def edit_profile():
 
 
 
-@app.route("/my_blog", methods=['GET', 'POST'])
+@app.route('/my_blog', methods=['GET', 'POST'])
 @login_required
 def my_blog():
 	form = PostForm()
+
 	if form.validate_on_submit():
 		post= Post(title=form.title.data, content=form.content.data, author=current_user)
 		db.session.add(post)
@@ -263,7 +264,7 @@ def my_blog():
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('my_blog.html', image_file=img_file, form=form)
 
-@app.route("/blog_home", methods=['GET', 'POST'])
+@app.route('/blog_home', methods=['GET', 'POST'])
 @login_required
 def blog_home():
 	posts= Post.query.all()
