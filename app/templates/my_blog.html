@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Home
+My_Blog
 {% endblock %}
 
 {% block styles %}
@@ -60,12 +60,13 @@ Home
             <table class="table table-striped">
               <thead>
 
-    <form>
+    <form class="form-signin" method="POST" action="/my_blog">
+    {{ form.hidden_tag() }}
     {{ wtf.form_field(form.title) }}
     {{ wtf.form_field(form.content) }}
     <button class="btn btn-lg btn-primary btn-block" type="submit">Create Blog</button>
   </form>
-  <form class="form-signin" method="POST" action="/my_blog">
+  
 <div class="container">
 
  
