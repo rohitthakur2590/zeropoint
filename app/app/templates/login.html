@@ -11,8 +11,7 @@ Login
 {% endblock %}
 
 {% block content %}
-<p></p>
-{% include 'flash.html' %}
+
     <div class="container">
 
       <form class="form-signin" method="POST" action="/login">
@@ -23,6 +22,7 @@ Login
         {{ wtf.form_field(form.remember) }}
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
-
+<p></p>
+{% include 'flash.html' %}
     </div> <!-- /container -->
 {% endblock %}

@@ -30,15 +30,15 @@ body {
  */
 
 /* Hide for mobile, show later */
-.sidebar {
+.lsidebar {
   display: none;
 }
 @media (min-width: 768px) {
-  .sidebar {
+  .lsidebar {
     position: fixed;
     top: 51px;
     bottom: 0;
-    left: 0;
+    left: 1000;
     z-index: 1000;
     display: block;
     padding: 20px;
@@ -50,22 +50,22 @@ body {
 }
 
 /* Sidebar navigation */
-.nav-sidebar {
+.nav-lsidebar {
   margin-right: -21px; /* 20px padding + 1px border */
   margin-bottom: 20px;
   margin-left: -20px;
 }
-.nav-sidebar > li > a {
+.nav-lsidebar > li > a {
   padding-right: 20px;
   padding-left: 20px;
 }
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus {
+.nav-lsidebar > .active > a,
+.nav-lsidebar > .active > a:hover,
+.nav-lsidebar > .active > a:focus {
   color: #fff;
   background-color: #428bca;
 }
-  
+
 
 /*
  * Main content

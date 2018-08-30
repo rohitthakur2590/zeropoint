@@ -61,13 +61,11 @@ Login
     <div class="col-xs-6">
         <div class="well">
             <legend>Journal View <br>{{ message_id }}</legend>
-            {{ outputform.copy(class="btn btn-primary",id="copy") }}
-            <span id="copyStatus"></span>
-            <div id="out" style="display:none">
-                {{output}}
-            </div>
-
-            <div id="XMLHolder"/>
+            <form>
+              <label>Select Date </label><br>
+              <input type="date"><br>
+              <input type = "submit">
+            </form>
 
             <script>
                 xml=out.innerHTML;

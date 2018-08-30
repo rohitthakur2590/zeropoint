@@ -40,7 +40,7 @@ Home
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+            <li class="active"><a href="{{url_for('blog_home')}}">Blog<span class="sr-only">(current)</span></a></li>
             <li><a href="#">Journals</a></li>
             <li><a href="#">Books</a></li>
             <li><a href="#">Documents</a></li>
@@ -62,8 +62,8 @@ Home
 
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
+              <img src="{{ image_file }}" width="130" height="130" class="img-responsive" alt="Generic placeholder thumbnail">
+              <li><a href="{{ url_for('edit_profile') }}">Edit-Profile</a></li>
               <span class="text-muted">Change Profile Pic</span>
             </div>
           <h2 class="sub-header">Section title</h2>
