@@ -1,5 +1,8 @@
+import os
+import secrets
+from PIL import Image
 from flask import render_template, flash, request, redirect, url_for, abort
-from sawrword import app 
+from sawrword import app, db
 from sawrword.models import User, Post
 from sawrword.forms import LoginForm, RegisterForm, UpdateProfileForm, CommandToSendForm, OutputForm, PostForm
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -9,6 +12,7 @@ from flask_login import LoginManager, login_user,login_required, logout_user, cu
 from lxml.etree import XMLSyntaxError
 from lxml.etree import tostring
 from xml.etree  import ElementTree as ET
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -181,7 +185,7 @@ def update_post(post_id):
 	if post.author != current_user:
 		abort(403)
 	form = PostForm()
-	if form.validate_on_submit():
+	if form.validate_on_submit(): 
 		post.title = form.title.data
 		post.content = form.content.data
 		db.session.commit()
@@ -191,7 +195,7 @@ def update_post(post_id):
 		form.title.data =post.title
 		form.content.data = post.content
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	return render_template('update_post.html', image_file=img_file, form=form, post=post,
+	return render_template('update_post.html', image_file=img_file, form=form,
 		legend = 'Update Post')
 
 

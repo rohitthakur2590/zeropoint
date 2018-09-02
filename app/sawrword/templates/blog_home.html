@@ -56,8 +56,8 @@ Home
           
            <div class="media-body"> 
             <div class="article-metadata">
-          <img src="{{ image_file }}" width="40" height="40" class="img-responsive" alt="Generic placeholder thumbnail">
-           <h1><a class="article-title" href="{{ url_for('post', post_id=post.id)}}">{{ post.title }}</a></h1>
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + post.author.image_file) }}" width="40" height="40">
+           <h1><a class="article-title" href="{{ url_for('post',post_id=post.id)}}">{{ post.title }}</a></h1>
            <p class="article-content">By {{ post.author.firstname }} on {{ post.date_posted }} </p>
            <p class="article-content">{{ post.content }} </p>
          </div>
@@ -67,5 +67,5 @@ Home
 
 <div class="container">
 
- 
+ {% include 'flash.html' %}
 {% endblock %}

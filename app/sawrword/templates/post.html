@@ -1,7 +1,7 @@
 {% extends "bootstrap/base.html" %}
 
 {% block title %}
-Home
+Post
 {% endblock %}
 
 {% block styles %}
@@ -41,7 +41,7 @@ Home
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
            
-            <li><a href="{{ url_for(post_id=post.id, 'update')}}">Edit</a></li>
+            <li><a href="{{ url_for('update_post',post_id=post.id)}}">Edit</a></li>
             <li><a href="#">Delete</a></li>
             <li><a href="#">Share</a></li>
           </ul>
@@ -66,5 +66,5 @@ Home
 
 <div class="container">
 
- 
+{% include 'flash.html' %} 
 {% endblock %}

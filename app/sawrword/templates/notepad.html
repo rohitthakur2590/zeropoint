@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Login
+notepad
 {% endblock %}
 
 {% block styles %}
@@ -20,7 +20,7 @@ Login
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">bluewrite</a>
+          <a class="navbar-brand" href="#">sawrword</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -67,52 +67,8 @@ Login
               <input type = "submit">
             </form>
 
-            <script>
-                xml=out.innerHTML;
-                if(xml.trim()){
-                    xml=xml.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
-                    LoadXMLString('XMLHolder',xml);
-                }
+           
 
-                $('#copy').click(function(e) {
-                  CopyToClipboard('out')
-                });
-
-                function CopyToClipboard(containerid) {
-                      let textarea = document.createElement('textarea')
-                      textarea.id = 't'
-                      textarea.style.height = 0
-                      document.body.appendChild(textarea)
-                      textarea.value = document.getElementById(containerid).innerText
-                      let selector = document.querySelector('#t')
-                      selector.select()
-                      var ok=document.execCommand('copy')
-                      if (ok) copyStatus.innerHTML = 'Copied!';
-                      else copyStatus.innerHTML = 'Unable to copy!';
-                      document.body.removeChild(textarea)
-                }
-
-
-
-            </script>
-
-            <style type="text/css">
-                .blink {
-                    animation-duration: 3s;
-                    animation-name: blink;
-                    animation-iteration-count: 1;
-                    animation-direction: alternate;
-                    animation-timing-function: ease-in-out;
-                }
-                @keyframes blink {
-                    from {
-                        opacity: 1;
-                    }
-                    to {
-                        opacity: 0;
-                    }
-                }
-    	    </style>
 
 
         </div>

@@ -1,4 +1,4 @@
-
+from flask_login import current_user
 from wtforms import Form, TextAreaField, validators, SubmitField, TextField
 from wtforms.validators import InputRequired, DataRequired
 
@@ -7,7 +7,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length 
 
-
+from sawrword.models import User
 
 #Login Form
 class LoginForm(FlaskForm):
