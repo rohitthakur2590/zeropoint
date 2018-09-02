@@ -40,7 +40,7 @@ Post
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-           
+            <li class="active"><a href="{{url_for('blog_home')}}">Blog<span class="sr-only">(current)</span></a></li>
             <li><a href="{{ url_for('update_post',post_id=post.id)}}">Edit</a></li>
             <li><a href="#">Delete</a></li>
             <li><a href="#">Share</a></li>
@@ -56,6 +56,12 @@ Post
            <div class="media-body"> 
             <div class="article-metadata">
           <img src="{{ image_file }}" width="40" height="40" class="img-responsive" alt="Generic placeholder thumbnail">
+            {% if post.author == current_user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>
+            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+          </div>
+          {% endif %}
            <h2 class="article-title">{{ post.title }} </h2>
            <p class="article-content">By {{ post.author.firstname }} on {{ post.date_posted }} </p>
            <p class="article-content">{{ post.content }} </p>
@@ -65,6 +71,24 @@ Post
          <body> 
 
 <div class="container">
-
+ <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <form action="{{url_for('delete_post', post_id = post.id)}}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% include 'flash.html' %} 
 {% endblock %}
