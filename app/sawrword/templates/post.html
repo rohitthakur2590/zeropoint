@@ -55,7 +55,7 @@ Post
           
            <div class="media-body"> 
             <div class="article-metadata">
-          <img src="{{ image_file }}" width="40" height="40" class="img-responsive" alt="Generic placeholder thumbnail">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + post.author.image_file) }}" width="60" height="60">
             {% if post.author == current_user %}
           <div>
             <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>

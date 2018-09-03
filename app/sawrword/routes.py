@@ -167,7 +167,7 @@ def my_blog():
 		post= Post(title=form.title.data, content=form.content.data, author=current_user)
 		db.session.add(post)
 		db.session.commit()
-		flash('Your post has been created!', 'success')
+		flash('Your post has been created!', category='success')
 		return redirect(url_for('profile'))
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('my_blog.html', image_file=img_file, form=form, legend = 'Create Post')
@@ -214,7 +214,8 @@ def delete_post(post_id):
 @app.route('/blog_home', methods=['GET', 'POST'])
 @login_required
 def blog_home():
-	posts= Post.query.all()
+	page = request.args.get('page', 1, type=int)
+	posts= Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('blog_home.html', image_file=img_file, posts=posts)
 
@@ -223,3 +224,11 @@ def blog_home():
 def logout():
 	logout_user()
 	return redirect(url_for('index'))
+
+@app.route("/user/<string:username>")
+def user_post():
+	page = request.args.get('page', 1, type=int)
+	user = User.query.filter_by(username=username).first_or_404()
+	posts= Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('user_post.html', image_file=img_file, posts=posts, user=user)
