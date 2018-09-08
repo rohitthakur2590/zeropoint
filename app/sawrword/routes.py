@@ -2,9 +2,10 @@ import os
 import secrets
 from PIL import Image
 from flask import render_template, flash, request, redirect, url_for, abort
-from sawrword import app, db
+from sawrword import app, db, mail
 from sawrword.models import User, Post
-from sawrword.forms import LoginForm, RegisterForm, UpdateProfileForm, CommandToSendForm, OutputForm, PostForm
+from sawrword.forms import (LoginForm, RegisterForm, UpdateProfileForm, CommandToSendForm, 
+	                        OutputForm, PostForm, RequestResetForm, ResetPasswordForm)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_login import LoginManager, login_user,login_required, logout_user, current_user
@@ -12,6 +13,7 @@ from flask_login import LoginManager, login_user,login_required, logout_user, cu
 from lxml.etree import XMLSyntaxError
 from lxml.etree import tostring
 from xml.etree  import ElementTree as ET
+from flask_mail import Message
 
 
 login_manager = LoginManager()
@@ -232,3 +234,51 @@ def user_post():
 	posts= Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('user_post.html', image_file=img_file, posts=posts, user=user)
+
+def send_reset_email(user):
+	token = user.get_reset_token()
+	msg = Message('Password Reset Request', sender='sawrword@gmail.com', recipients=[user.email])
+
+	msg.body = f'''To reset the password click the link below:
+	{url_for('reset_token', token=token, _external=True)}
+	lINK WILL EXPIRE IN 1 HOUR '''
+	mail.send( msg )
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_request():
+	if current_user.is_authenticated:
+		return redirect(url_for('blog_home'))
+
+	form = RequestResetForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(email=form.email.data).first()
+		send_reset_email(user)
+		flash('Please Check you email for password reset link', category='info')
+		return redirect(url_for('login'))
+	return render_template('reset_request.html', title= 'Reset Password', form=form)
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+	if current_user.is_authenticated:
+			return redirect(url_for('blog_home'))
+
+	user = User.verify_reset_token(token)
+	if user is None:
+		flash('Invalid or Expired Token', category='warning')
+		return redirect(url_for('reset_request'))
+	form = ResetPasswordForm()
+	if form.validate_on_submit():
+ 		hashed_password = generate_password_hash(form.password.data, method='sha256')
+ 		user.password = hashed_password
+ 		db.session.commit()
+ 		flash('Password updated  successfully for {form.firstname.data}!', 'success')
+ 		return redirect('login')
+	return render_template('reset_token.html', title='Reset Password', form=form)
+
+    
+
+
+
+
+
+

@@ -20,8 +20,15 @@ Login
         {{ wtf.form_field(form.email) }}
         {{ wtf.form_field(form.password) }}
         {{ wtf.form_field(form.remember) }}
+         <small class="text-muted ml-2">
+           <a href="{{ url_for('reset_request') }}">Forgot Password?</a>
+        </small> 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
+
+       
+       
+
 <p></p>
 {% include 'flash.html' %}
     </div> <!-- /container -->
