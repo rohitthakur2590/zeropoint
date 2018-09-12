@@ -4,7 +4,7 @@ from PIL import Image
 from flask import render_template, flash, request, redirect, url_for, abort
 from sawrword import app, db, mail
 from sawrword.models import User, Post
-from sawrword.forms import (LoginForm, RegisterForm, UpdateProfileForm, CommandToSendForm, 
+from sawrword.forms import (LoginForm, RegisterForm, UpdateProfileForm, CommandToSendForm,
 	                        OutputForm, PostForm, RequestResetForm, ResetPasswordForm)
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -31,6 +31,14 @@ def load_user(user_id):
 def index():
 	return render_template('index.html')
 
+@app.route('/about_us')
+def about_us():
+	return render_template('about_us.html')
+
+@app.route('/terms')
+def terms():
+	return render_template('terms.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	form = LoginForm()
@@ -55,9 +63,9 @@ def signup():
 
  	if form.validate_on_submit():
  		hash_password = generate_password_hash(form.password.data, method='sha256')
- 		new_user = User(firstname=form.firstname.data, 
+ 		new_user = User(firstname=form.firstname.data,
  			            lastname=form.lastname.data,
- 			            email=form.email.data, 
+ 			            email=form.email.data,
  			            password=hash_password)
 
  		db.session.add(new_user)
@@ -77,7 +85,7 @@ def notepad():
 	outputform = OutputForm()
 
 	command = ""
-    
+
 	#parse button_input.xml
 	buttons = parse_buttons()
 	button_list = sorted(buttons.items())
@@ -110,15 +118,15 @@ def parse_buttons():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-	return render_template('dashboard.html', name=current_user.firstname)	
+	return render_template('dashboard.html', name=current_user.firstname)
 
 
 @app.route('/profile')
 @login_required
 def profile():
 	form = UpdateProfileForm()
-	img_file = url_for('static', filename='display_pics/' + current_user.image_file)	
-	return render_template('profile.html', name=current_user.firstname, image_file=img_file, form=form)	
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('profile.html', name=current_user.firstname, image_file=img_file, form=form)
 
 def save_picture(form_picture):
 	random_hex = secrets.token_hex(8)
@@ -155,8 +163,8 @@ def edit_profile():
 		form.lastname.data = current_user.lastname
 		form.username.data = current_user.username
 		form.email.data = current_user.email
-	img_file = url_for('static', filename='display_pics/' + current_user.image_file)	
-	return render_template('edit_profile.html', name=current_user.firstname, image_file=img_file, form=form)	
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('edit_profile.html', name=current_user.firstname, image_file=img_file, form=form)
 
 
 
@@ -174,6 +182,20 @@ def my_blog():
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('my_blog.html', image_file=img_file, form=form, legend = 'Create Post')
 
+@app.route('/my_article', methods=['GET', 'POST'])
+@login_required
+def my_article():
+	form = PostForm()
+
+	if form.validate_on_submit():
+		post= Post(title=form.title.data, content=form.content.data, author=current_user)
+		db.session.add(post)
+		db.session.commit()
+		flash('Your post has been created!', category='success')
+		return redirect(url_for('profile'))
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('my_article.html', image_file=img_file, form=form, legend = 'Create Article')
+
 @app.route("/<int:post_id>")
 def post(post_id):
 	post =Post.query.get_or_404(post_id)
@@ -187,7 +209,7 @@ def update_post(post_id):
 	if post.author != current_user:
 		abort(403)
 	form = PostForm()
-	if form.validate_on_submit(): 
+	if form.validate_on_submit():
 		post.title = form.title.data
 		post.content = form.content.data
 		db.session.commit()
@@ -220,6 +242,14 @@ def blog_home():
 	posts= Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('blog_home.html', image_file=img_file, posts=posts)
+
+@app.route('/article_home', methods=['GET', 'POST'])
+@login_required
+def article_home():
+	page = request.args.get('page', 1, type=int)
+	posts= Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('article_home.html', image_file=img_file, posts=posts)
 
 @app.route('/logout')
 @login_required
@@ -275,7 +305,7 @@ def reset_token(token):
  		return redirect('login')
 	return render_template('reset_token.html', title='Reset Password', form=form)
 
-    
+
 
 
 

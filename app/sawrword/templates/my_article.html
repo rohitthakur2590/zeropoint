@@ -1,7 +1,8 @@
 {% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Home
+My_Article
 {% endblock %}
 
 {% block styles %}
@@ -40,50 +41,42 @@ Home
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="{{ url_for('profile') }}">Profile<span class="sr-only">(current)</span></a></li>
-            <li><a href="{{ url_for('my_blog') }}">Create New</a></li>
-              <li><a href="#">Followers</a></li>
-            <li><a href="#">Follow</a></li>
-            <li><a href="#">Latest Posts</a></li>
+            <li class="active"><a href="{{url_for('article_home')}}">Articles<span class="sr-only">(current)</span></a></li>
+              <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
           </ul>
 
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">{{ name }}</h1>
-         </body>
-      
 
-       
-          {% for post in posts.items %}
+             <article class="media content-section">
 
-        <article class="media content-section">
-          <!--
-          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + post.author.image_file) }}" width="60" height="60" class="img-responsive" alt="Generic placeholder thumbnail">
-          <-->
-          <img src="{{ image_file }}" width="70" height="70" class="img-responsive" alt="Generic placeholder thumbnail">
           <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{{ url_for('user_post', username=post.author.firstname)}}">{{ post.author.firstname}}</a>
-              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
-            </div>
-            <h4><a class="article-title" href="{{ url_for('post',post_id=post.id) }}">{{ post.title }}</a></h4>
-            <p class="article-content">{{ post.content }}</p>
+            <div class="row placeholders">
+
+          </div><div class="table-responsive">
+          <div>
+             <form class="form-signin" method="POST" action="/my_article">
+    <legend class="border-bottom mb-4">{{ legend }}</legend>
+    {{ form.hidden_tag() }}
+    <div style="width: 25%">
+    {{ wtf.form_field(form.title) }}
+    </div>
+    <div style = "width: 90%">
+    {{ wtf.form_field(form.content, rows = '20', color = '#E1EC9B') }}
+    </div>
+    </br>
+    </div>
+     <div style ="width: 25%"  align="center">
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
+     </div>
+     </form>
+
+        </div>
           </div>
         </article>
-       {% endfor %}
-
-          {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-      {% if page_num %}
-        {% if posts.page == page_num %}
-          <a class="btn btn-info mb-4" href="{{ url_for('blog_home', page=page_num) }}">{{ page_num }}</a>
-        {% else %}
-          <a class="btn btn-outline-info mb-4" href="{{ url_for('blog_home', page=page_num) }}">{{ page_num }}</a>
-        {% endif %}
-      {% else %}
-        ...
-      {% endif %}
-    {% endfor %}
-         <body> 
 
 <div class="container">
 

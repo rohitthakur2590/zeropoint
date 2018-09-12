@@ -61,7 +61,7 @@ Profile
           <h1 class="page-header">{{ name }}</h1>
 <!--
           <div class="row placeholders">
-          
+
               <img src="{{ image_file }}" width="130" height="130" class="img-responsive" alt="Generic placeholder thumbnail">
               <a href="{{ url_for('edit_profile') }}">Edit-Profile</a>
               <span class="text-muted">Change Profile Pic</span>
@@ -69,19 +69,21 @@ Profile
           <div class="row placeholders">
           <h2 class="sub-header">Shape Your Thoughts</h2>
   <-->
-      <article class="media content-section">
+      <article class="media content-section" >
           <img src="{{ image_file }}" width="130" height="130" class="img-responsive" alt="Generic placeholder thumbnail" background="/static/img.jpg ">
           <div class="media-body">
             <div class="article-metadata">
               <a class="mr-2" href="{{ url_for('edit_profile')}}">Edit-Profile</a>
             </div>
+        </article>
             <div class="row placeholders">
+
           <h2 class="sub-header">Shape Your Thoughts</h2>
           </div><div class="table-responsive">
           <div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <img src="static/profile/blog.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Blog</h4>
+              <a href="{{ url_for('blog_home') }}"><h4>Blog</h4></a>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <img src="static/profile/notes.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
@@ -89,7 +91,7 @@ Profile
             </div>
              <div class="col-xs-6 col-sm-3 placeholder">
               <img src="static/profile/article.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Article</h4>
+              <a href="{{ url_for('article_home') }}"><h4>Article</h4></a>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <img src="static/profile/journal.jpg" width="80" height="120" class="img-responsive" alt="Generic placeholder thumbnail">
@@ -112,15 +114,15 @@ Profile
               <h4>Books</h4>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="static/profile/task.jpg" width="80" height="120" class="img-responsive" alt="Generic placeholder thumbnail">
+              <img src="static/profile/task.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
               <h4>Task</h4>
             </div>
-            
+
           </div>
         </div>
           </div>
-        </article>         
-            
+        </article>
+
           </div>
         </div>
       </div>

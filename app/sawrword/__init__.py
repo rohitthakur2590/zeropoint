@@ -16,8 +16,8 @@ db = SQLAlchemy(app)
 app.config['MAIL_SERVER'] ='smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'sa@gmail.com'
-app.config['MAIL_PASSWORD'] = 'sa'
+app.config['MAIL_USERNAME'] = 'sawrword@gmail.com'
+app.config['MAIL_PASSWORD'] = 'sawrword_1618'
 mail = Mail(app)
 
 
