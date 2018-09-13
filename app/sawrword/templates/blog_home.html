@@ -19,7 +19,7 @@ Home
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">sawrwrite</a>
+          <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -51,16 +51,12 @@ Home
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">{{ name }}</h1>
          </body>
-      
 
-       
+
+
           {% for post in posts.items %}
-
         <article class="media content-section">
-          <!--
-          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + post.author.image_file) }}" width="60" height="60" class="img-responsive" alt="Generic placeholder thumbnail">
-          <-->
-          <img src="{{ image_file }}" width="70" height="70" class="img-responsive" alt="Generic placeholder thumbnail">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + post.author.image_file) }}" width="60" height="60">
           <div class="media-body">
             <div class="article-metadata">
               <a class="mr-2" href="{{ url_for('user_post', username=post.author.firstname)}}">{{ post.author.firstname}}</a>
@@ -83,7 +79,7 @@ Home
         ...
       {% endif %}
     {% endfor %}
-         <body> 
+         <body>
 
 <div class="container">
 

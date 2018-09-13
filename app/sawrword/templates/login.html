@@ -11,7 +11,30 @@ Login
 {% endblock %}
 
 {% block content %}
-
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{{url_for('about_us') }}">About</a></li>
+            <li class="active"><a href="{{ url_for('login') }}">Login</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+ <div>
+              <img src="static/icons/cover3.jpg" width="100%" height="130">
+</div>
     <div class="container">
 
       <form class="form-signin" method="POST" action="/login">
@@ -22,12 +45,12 @@ Login
         {{ wtf.form_field(form.remember) }}
          <small class="text-muted ml-2">
            <a href="{{ url_for('reset_request') }}">Forgot Password?</a>
-        </small> 
+        </small>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
 
-       
-       
+
+
 
 <p></p>
 {% include 'flash.html' %}

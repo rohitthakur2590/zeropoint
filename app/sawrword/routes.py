@@ -3,9 +3,9 @@ import secrets
 from PIL import Image
 from flask import render_template, flash, request, redirect, url_for, abort
 from sawrword import app, db, mail
-from sawrword.models import User, Post
+from sawrword.models import User, Post, Article
 from sawrword.forms import (LoginForm, RegisterForm, UpdateProfileForm, CommandToSendForm,
-	                        OutputForm, PostForm, RequestResetForm, ResetPasswordForm)
+	                        OutputForm, PostForm, ArticleForm, RequestResetForm, ResetPasswordForm)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_login import LoginManager, login_user,login_required, logout_user, current_user
@@ -50,7 +50,9 @@ def login():
 			if check_password_hash(user.password, form.password.data):
 				login_user(user, remember=form.remember.data)
 				return redirect(url_for('dashboard'))
-		flash('Invalid username or password!', category='danger')
+			flash('Invalid username or password!', category='danger')
+			return render_template('login.html', form=form)
+		flash('User Not registered! Please Sign Up', category='danger')
 		return render_template('login.html', form=form)
 		#return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
 	return render_template('login.html', form=form)
@@ -60,18 +62,23 @@ sha256 will generate 80 characters long password
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
  	form = RegisterForm()
-
  	if form.validate_on_submit():
- 		hash_password = generate_password_hash(form.password.data, method='sha256')
- 		new_user = User(firstname=form.firstname.data,
+ 	    hash_password = generate_password_hash(form.password.data, method='sha256')
+ 	    new_user = User(firstname=form.firstname.data,
  			            lastname=form.lastname.data,
  			            email=form.email.data,
  			            password=hash_password)
 
- 		db.session.add(new_user)
- 		db.session.commit()
- 		flash(f'Sign Up successful for {form.firstname.data}!', 'success')
- 		return render_template('index.html')
+ 	    user = User.query.filter_by(email=form.email.data).first()
+ 	    if user:
+ 	        flash('User with this email account already registered', 'success')
+ 	        return redirect(url_for('signup'))
+ 	    db.session.add(new_user)
+ 	    db.session.commit()
+ 	    flash(f'Sign Up successful for {form.firstname.data}!', 'success')
+ 	    return render_template('index.html')
+
+
  		#return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
 
  	return render_template('signup.html', form=form)
@@ -185,13 +192,13 @@ def my_blog():
 @app.route('/my_article', methods=['GET', 'POST'])
 @login_required
 def my_article():
-	form = PostForm()
+	form = ArticleForm()
 
 	if form.validate_on_submit():
-		post= Post(title=form.title.data, content=form.content.data, author=current_user)
-		db.session.add(post)
+		article= Article(title=form.title.data, content=form.content.data, author=current_user)
+		db.session.add(article)
 		db.session.commit()
-		flash('Your post has been created!', category='success')
+		flash('Your Article has been published!', category='success')
 		return redirect(url_for('profile'))
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('my_article.html', image_file=img_file, form=form, legend = 'Create Article')
@@ -201,6 +208,12 @@ def post(post_id):
 	post =Post.query.get_or_404(post_id)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('post.html',  image_file=img_file, title=post.title, post=post)
+
+@app.route("/<int:article_id>")
+def article(article_id):
+	article =Article.query.get_or_404(article_id)
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('article.html',  image_file=img_file, title=article.title, article=article)
 
 @app.route("/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -222,6 +235,27 @@ def update_post(post_id):
 	return render_template('update_post.html', image_file=img_file, form=form,
 		legend = 'Update Post')
 
+
+@app.route("/<int:article_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_article(article_id):
+	article =Article.query.get_or_404(article_id)
+	if article.author != current_user:
+		abort(403)
+	form = ArticleForm()
+	if form.validate_on_submit():
+		article.title = form.title.data
+		article.content = form.content.data
+		db.session.commit()
+		flash('Article updated successfully!', category='success')
+		return redirect(url_for('article', article_id = article.id))
+	elif request.method == 'GET':
+		form.title.data =article.title
+		form.content.data = article.content
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('update_article.html', image_file=img_file, form=form,
+		legend = 'Update Article')
+
 @app.route("/<int:post_id>/delete", methods=['POST'])
 @login_required
 def delete_post(post_id):
@@ -231,6 +265,17 @@ def delete_post(post_id):
 	db.session.delete(post)
 	db.session.commit()
 	flash('Post deleted successfully!',category='success')
+	return redirect(url_for('blog_home'))
+
+@app.route("/<int:article_id>/delete", methods=['POST'])
+@login_required
+def delete_article(article_id):
+	article =Article.query.get_or_404(article_id)
+	if article.author != current_user:
+		abort(403)
+	db.session.delete(article)
+	db.session.commit()
+	flash('Article deleted successfully!',category='success')
 	return redirect(url_for('blog_home'))
 
 
@@ -247,9 +292,9 @@ def blog_home():
 @login_required
 def article_home():
 	page = request.args.get('page', 1, type=int)
-	posts= Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+	articles= Article.query.order_by(Article.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	return render_template('article_home.html', image_file=img_file, posts=posts)
+	return render_template('article_home.html', image_file=img_file, articles=articles)
 
 @app.route('/logout')
 @login_required
@@ -262,8 +307,14 @@ def user_post():
 	page = request.args.get('page', 1, type=int)
 	user = User.query.filter_by(username=username).first_or_404()
 	posts= Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+	if posts:
+		img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+		return render_template('user_post.html', image_file=img_file, posts=posts, user=user)
+
+	articles= Article.query.filter_by(author=user).order_by(Article.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	return render_template('user_post.html', image_file=img_file, posts=posts, user=user)
+	return render_template('user_article.html', image_file=img_file, articles=articles, user=user)
+
 
 def send_reset_email(user):
 	token = user.get_reset_token()

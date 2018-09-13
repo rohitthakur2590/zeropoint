@@ -1,7 +1,7 @@
 {% extends "bootstrap/base.html" %}
 
 {% block title %}
-Post
+Article
 {% endblock %}
 
 {% block styles %}
@@ -41,7 +41,7 @@ Post
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="{{url_for('blog_home')}}">Blog<span class="sr-only">(current)</span></a></li>
-            <li><a href="{{ url_for('update_post',post_id=post.id)}}">Edit</a></li>
+            <li><a href="{{ url_for('update_article',article_id=article.id)}}">Edit</a></li>
             <li><a href="#">Delete</a></li>
             <li><a href="#">Share</a></li>
           </ul>
@@ -55,16 +55,16 @@ Post
 
            <div class="media-body">
             <div class="article-metadata">
-          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + post.author.image_file) }}" width="60" height="60">
-            {% if post.author == current_user %}
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + article.author.image_file) }}" width="60" height="60">
+            {% if article.author == current_user %}
           <div>
-            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_article', article_id=article.id) }}">Update</a>
             <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
           </div>
           {% endif %}
-           <h2 class="article-title">{{ post.title }} </h2>
-           <p class="article-content">By {{ post.author.firstname }} on {{ post.date_posted }} </p>
-           <p class="article-content">{{ post.content }} </p>
+           <h2 class="article-title">{{ article.title }} </h2>
+           <p class="article-content">By {{ article.author.firstname }} on {{ article.date_posted }} </p>
+           <p class="article-content">{{ article.content }} </p>
          </div>
           </article>
 
@@ -76,14 +76,14 @@ Post
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <h5 class="modal-title" id="deleteModalLabel">Delete Article?</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <form action="{{url_for('delete_post', post_id = post.id)}}" method="POST">
+          <form action="{{url_for('delete_article', article_id = article.id)}}" method="POST">
             <input class="btn btn-danger" type="submit" value="Delete">
           </form>
         </div>

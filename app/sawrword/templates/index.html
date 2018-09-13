@@ -1,12 +1,12 @@
 {% extends "bootstrap/base.html" %}
 
 {% block title %}
-Demo App
+sawrword
 {% endblock %}
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('.static', filename='starter-template.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
 {% endblock %}
 
 {% block content %}
@@ -19,11 +19,11 @@ Demo App
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">sawrword</a>
+          <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="{{url_for('about_us') }}">About</a></li>
+            <li><a href="{{url_for('about_us') }}">About</a></li>
             <li><a href="{{ url_for('login') }}">Login</a></li>
             <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
             <li><a href="{{ url_for('signup') }}">Contact Us</a></li>
@@ -31,14 +31,18 @@ Demo App
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-
+ <div>
+              <img src="static/icons/cover3.jpg" width="100%" height="130">
+</div>
     <div class="container">
-
-      <div class="starter-template">
-        <h1>Welcome to sawrword</h1>
-        <p class="lead">Write Your Blogs, Daily Journals, Articles, News <br>
-           Knowledge and Imagination For Everyone</p>
-      </div>
-
-    </div><!-- /.container -->
+      <div class="a">
+<h2>Built for maven and autodidact</h2>
+<p class="lead">
+sawrword is a platform inspired by the way you learn,
+share and enhance the knowledge and imagination, you can
+write your blogs, articles, journals and spread news and share thoughts
+so that you can make a difference.</p>
+</div>
+</div><!-- /.container -->
+{% include 'flash.html' %}
 {% endblock %}
