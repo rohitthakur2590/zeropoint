@@ -20,7 +20,7 @@ My_Blog
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">sawrwrite</a>
+          <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -46,29 +46,70 @@ My_Blog
             <li><a href="#">Follow</a></li>
             <li><a href="#">Latest Posts</a></li>
           </ul>
-          
+
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">{{ name }}</h1>
-
-          <div class="row placeholders">
+       <!--
+        <article class="media content-section">
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="{{ image_file }}" width="100" height="100" class="img-responsive" alt="Generic placeholder thumbnail">
-              <li><a></a></li>
-            </div>
+              <img src="{{ image_file }}" width="100" height="100" class="img-responsive" alt="Generic placeholder thumbnail" >
+
           <h2 class="sub-header"></h2>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
+       <-->
+             <article class="media content-section">
+         <!--
+          <img src="{{ image_file }}" width="40" height="40" class="img-responsive" alt="Generic placeholder thumbnail" background="/static/img.jpg ">
+         <-->
+          <div class="media-body">
+            <div class="row placeholders">
+          <h3 class="sub-header">Write your blog</h3>
+           <h4>Interests</h4><select name="Interest">
+        <option value="History">History</option>
+        <option value="Technology">Technology</option>
+         <option value="Technology">Sports</option>
+          <option value="Technology">Arts</option>
+           <option value="Technology">Profession</option>
+            <option value="Technology">Study</option>
+             <option value="Technology">Humanity</option>
+              <option value="Technology">Economics</option>
+               <option value="Technology">Business</option>
+                <option value="Technology">Social Science</option>
 
+        </select>
+          </div><div class="table-responsive">
+          <div>
+             <form class="form-signin" method="POST" action="/my_blog">
+    <legend class="border-bottom mb-4">{{ legend }}</legend>
+    {{ form.hidden_tag() }}
+    <div style="width: 25%">
+    {{ wtf.form_field(form.title) }}
+    </div>
+    <div style = "width: 90% >
+    {{ wtf.form_field(form.content, rows = '20') }}
+    </div>
+    </br>
+    </div>
+     <div style ="width: 25%"  align="center">
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
+     </div>
+     </form>
+
+        </div>
+          </div>
+        </article>
+    <!--
     <form class="form-signin" method="POST" action="/my_blog">
     <legend class="border-bottom mb-4">{{ legend }}</legend>
     {{ form.hidden_tag() }}
     {{ wtf.form_field(form.title) }}
     {{ wtf.form_field(form.content) }}
     <button class="btn btn-lg btn-primary btn-block" type="submit">{{ legend }}</button>
-  </form>
-  
+    </form>
+   <-->
 <div class="container">
 
  {% include 'flash.html' %}

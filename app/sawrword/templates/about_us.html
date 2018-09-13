@@ -20,14 +20,14 @@ About_Us
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">sawrword</a>
+          <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="{{url_for('about_us') }}">About</a></li>
             <li><a href="{{ url_for('login') }}">Login</a></li>
             <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
-            <li><a href="{{ url_for('signup') }}">Contact Us</a></li>
+            <li><a href="#">Contact Us</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -41,7 +41,7 @@ About_Us
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Company<span class="sr-only">(current)</span></a></li>
             <li><a href="{{ url_for('terms') }}">Terms</a></li>
-   
+
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -50,13 +50,15 @@ About_Us
           <div class="row placeholders">
           <h2 class="sub-header">About Us</h2>
           <br><br>
-           <div aclass = "a">
-            <h4><p>Rohit Thakur is the founder of sawword, a community of people who loves to read write and
-            	     share knowledge and information . He is responsible for the sawrword's overall vision 
-            	     and strategy as everyday operations.sawrword has focused on simplicity and inspiring creativity through solving problems with thoughtful product design. As a result, sawrword has become the platform for writing
-                    blogs, articles , news and day tp day journal for everyone from celebrities, newsrooms
-                    and brands, to teens, writers and anyone with a passion or purpose for creating a better and knowledgeable world.
-           </p></h4>
+           <div class = "d">
+            <h5>
+Rohit Thakur is the founder of sawrword, a community of people who loves to read write and
+share knowledge and information .He is responsible for the sawrword's overall vision
+and strategy as everyday operations.sawrword has focused on simplicity and inspiring creativity
+through solving problems with thoughtful product design. As a result, sawrword has become the
+platform for writing blogs, articles , news and day to day journal for everyone from celebrities, newsrooms
+and brands, to teens, writers and anyone with a passion or purpose for creating world with knowledge and imagination.
+           </h5>
           </div>
         </div>
       </div>

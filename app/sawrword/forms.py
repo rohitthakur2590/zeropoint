@@ -16,13 +16,14 @@ class LoginForm(FlaskForm):
       remember = BooleanField('remember me')
 
 #Register Form
-class RegisterForm(FlaskForm): 
+class RegisterForm(FlaskForm):
       firstname = StringField('First name', validators=[InputRequired(), Length(min=1, max=20)])
       lastname = StringField('Last name', validators=[InputRequired(), Length(min=1, max=20)])
       email = StringField('Email-Id', validators=[InputRequired(), Email(message = 'Invalid email'), Length(max=50)])
       password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
+      confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
 
-class UpdateProfileForm(FlaskForm): 
+class UpdateProfileForm(FlaskForm):
       firstname = StringField('First name', validators=[InputRequired(), Length(min=1, max=20)])
       lastname = StringField('Last name', validators=[InputRequired(), Length(min=1, max=20)])
       username = StringField('Username', validators=[InputRequired(), Length(min=1, max=20)])
@@ -31,16 +32,16 @@ class UpdateProfileForm(FlaskForm):
       #submit = SubmitField('Update')
 
       def validate_username(self, username):
-      	if username.data != current_user.username:
-      		user = User.query.filter_by(username=username.data).first()
-      		if user:
-      			raise ValidationError('username is already taken')
+        if username.data != current_user.username:
+          user = User.query.filter_by(username=username.data).first()
+          if user:
+            raise ValidationError('username is already taken')
 
       def validate_email(self, email):
-      	if email.data != current_user.email:
-      		user = User.query.filter_by(username=email.data).first()
-      		if user:
-      			raise ValidationError('email account already exist')
+        if email.data != current_user.email:
+          user = User.query.filter_by(username=email.data).first()
+          if user:
+            raise ValidationError('email account already exist')
 
 class CommandToSendForm(Form):
         fixedXmlString = TextAreaField("Fixed XML String",render_kw={'class': 'form-control','readonly': True})
@@ -50,12 +51,16 @@ class CommandToSendForm(Form):
 
 class OutputForm(Form):
         copy = SubmitField(label='Copy Output')
-        output = TextAreaField("Received Output",render_kw={'class': 'form-control'}) 
+        output = TextAreaField("Received Output",render_kw={'class': 'form-control'})
 
 class PostForm(FlaskForm):
-	title = StringField('Title', validators=[DataRequired()])
-	content = TextAreaField('Content', validators=[DataRequired()])
-	#submit = SubmitField('Post')
+  title = StringField('Title', validators=[DataRequired()])
+  content = TextAreaField('Content', validators=[DataRequired()])
+  #submit = SubmitField('Post')
+
+class ArticleForm(FlaskForm):
+  title = StringField('Title', validators=[DataRequired()])
+  content = TextAreaField('Content', validators=[DataRequired()])
 
 class RequestResetForm(FlaskForm):
   email = StringField('Email-Id', validators=[InputRequired(), Email(message = 'Invalid email'), Length(max=50)])
