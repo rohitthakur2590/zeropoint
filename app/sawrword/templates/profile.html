@@ -26,7 +26,7 @@ Profile
             <li><a href="{{ url_for('dashboard') }}">Home</a></li>
             <li><a href="#">Settings</a></li>
             <li><a href="{{ url_for('profile') }}">Profile</a></li>
-            <li><a href="{{ url_for('notepad') }}">WriteOn</a></li>
+            <li><a href="#">Forums</a></li>
             <li><a href="{{ url_for('logout') }}">Log Out</a></li>
           </ul>
           <form class="navbar-form navbar-right">
@@ -40,46 +40,28 @@ Profile
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="{{url_for('blog_home')}}">Blog<span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Journals</a></li>
-            <li><a href="#">Books</a></li>
+            <li class="active"><a href="{{ url_for('edit_profile')}}">Edit-Profile<span class="sr-only">(current)</span></a></li>    
             <li><a href="#">Documents</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href="">News</a></li>
-            <li><a href="">Article</a></li>
             <li><a href="">Events</a></li>
           </ul>
+        
           <ul class="nav nav-sidebar">
             <li><a href="">Subscriptions</a></li>
             <li><a href="">Notifications</a></li>
             <li><a href="">Messages</a></li>
-            <li><a href="">Contacts</a></li>
+           
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">{{ name }}</h1>
-<!--
-          <div class="row placeholders">
-
-              <img src="{{ image_file }}" width="130" height="130" class="img-responsive" alt="Generic placeholder thumbnail">
-              <a href="{{ url_for('edit_profile') }}">Edit-Profile</a>
-              <span class="text-muted">Change Profile Pic</span>
-          </div>
-          <div class="row placeholders">
-          <h2 class="sub-header">Shape Your Thoughts</h2>
-  <-->
+          <h3 class="page-header">{{ name }}</h3>
       <article class="media content-section" >
-          <img src="{{ image_file }}" width="130" height="130" class="img-responsive" alt="Generic placeholder thumbnail" background="/static/img.jpg ">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{{ url_for('edit_profile')}}">Edit-Profile</a>
-            </div>
+          <img src="{{ image_file }}" width="120" height="120" class="img-responsive" alt="Generic placeholder thumbnail" background="/static/img.jpg ">
+       
         </article>
             <div class="row placeholders">
-
-          <h2 class="sub-header">Shape Your Thoughts</h2>
-          </div><div class="table-responsive">
+          <h4 class="sub-header">Shape Your Thoughts</h4>
+          </div>
+          <div class="table-responsive">
           <div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <img src="static/profile/blog.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
@@ -87,7 +69,7 @@ Profile
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <img src="static/profile/notes.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Notes</h4>
+               <a href="{{ url_for('note_home') }}"><h4>Notes</h4>
             </div>
              <div class="col-xs-6 col-sm-3 placeholder">
               <img src="static/profile/article.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
@@ -95,7 +77,7 @@ Profile
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <img src="static/profile/journal.jpg" width="80" height="120" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Journal</h4>
+              <a href="{{ url_for('journal_home') }}"><h4>Journal</h4></a>
             </div>
           </div>
         </div>

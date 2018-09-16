@@ -15,6 +15,13 @@ class LoginForm(FlaskForm):
       password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
       remember = BooleanField('remember me')
 
+class ContactForm(FlaskForm):
+      firstname = StringField('First name', validators=[InputRequired(), Length(min=1, max=20)])
+      lastname = StringField('Last name', validators=[InputRequired(), Length(min=1, max=20)])
+      email = StringField('email', validators=[InputRequired(), Length(min=4, max=50)])
+      content = TextAreaField('Content', validators=[DataRequired()])
+ 
+
 #Register Form
 class RegisterForm(FlaskForm):
       firstname = StringField('First name', validators=[InputRequired(), Length(min=1, max=20)])
@@ -59,6 +66,14 @@ class PostForm(FlaskForm):
   #submit = SubmitField('Post')
 
 class ArticleForm(FlaskForm):
+  title = StringField('Title', validators=[DataRequired()])
+  content = TextAreaField('Content', validators=[DataRequired()])
+
+class JournalForm(FlaskForm):
+  title = StringField('Title', validators=[DataRequired()])
+  content = TextAreaField('Content', validators=[DataRequired()])
+
+class NoteForm(FlaskForm):
   title = StringField('Title', validators=[DataRequired()])
   content = TextAreaField('Content', validators=[DataRequired()])
 

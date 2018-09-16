@@ -3,10 +3,9 @@ import secrets
 from PIL import Image
 from flask import render_template, flash, request, redirect, url_for, abort
 from sawrword import app, db, mail
-from sawrword.models import User, Post, Article, Journal, Note
+from sawrword.models import User, Post, Article
 from sawrword.forms import (LoginForm, RegisterForm, UpdateProfileForm, CommandToSendForm,
-	                        OutputForm, PostForm, ArticleForm, JournalForm, NoteForm, 
-	                        ContactForm, RequestResetForm, ResetPasswordForm)
+	                        OutputForm, PostForm, ArticleForm, RequestResetForm, ResetPasswordForm)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_login import LoginManager, login_user,login_required, logout_user, current_user
@@ -85,21 +84,6 @@ def signup():
  	return render_template('signup.html', form=form)
 
 
-@app.route('/contact_us', methods=['GET', 'POST'])
-def contact_us():
-	form = ContactForm()
-
-	if form.validate_on_submit():
-		#looking for user in database
-		flash('We have received your message successfully',category='success')
-		#send_query_email(form.email, form.content)
-
-	return render_template('contact_us.html', form=form)
-
-def send_query_email(email, content):
-	msg = Message('Password Reset Request', sender='sawrword@gmail.com', recipients=sawrword@gmail.com)
-	mail.send( content )
-
 @app.route('/notepad', methods=['GET', 'POST'])
 @login_required
 def notepad():
@@ -141,29 +125,7 @@ def parse_buttons():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-	page = request.args.get('page', 1, type=int)
-	posts= Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
-	articles= Article.query.order_by(Article.date_posted.desc()).paginate(page=page, per_page=5)
-	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	return render_template('dashboard.html', name=current_user.firstname, image_file=img_file, posts=posts, articles = articles)
-
-
-@app.route('/dash_blog')
-@login_required
-def dash_blog():
-	page = request.args.get('page', 1, type=int)
-	posts= Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
-	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	return render_template('dash_blog.html', name=current_user.firstname, image_file=img_file, posts=posts)
-
-@app.route('/dash_article')
-@login_required
-def dash_article():
-	page = request.args.get('page', 1, type=int)
-	articles= Article.query.order_by(Article.date_posted.desc()).paginate(page=page, per_page=5)
-	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	return render_template('dash_article.html', name=current_user.firstname, image_file=img_file, articles=articles)
-
+	return render_template('dashboard.html', name=current_user.firstname)
 
 @app.route('/profession')
 @login_required
@@ -248,41 +210,13 @@ def my_article():
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('my_article.html', image_file=img_file, form=form, legend = 'Create Article')
 
-@app.route('/my_journal', methods=['GET', 'POST'])
-@login_required
-def my_journal():
-	form = JournalForm()
-
-	if form.validate_on_submit():
-		journal= Journal(title=form.title.data, content=form.content.data, author=current_user)
-		db.session.add(journal)
-		db.session.commit()
-		flash('Your Journal has been published!', category='success')
-		return redirect(url_for('profile'))
-	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	return render_template('my_journal.html', image_file=img_file, form=form, legend = 'Create Journal')
-
-@app.route('/my_note', methods=['GET', 'POST'])
-@login_required
-def my_note():
-	form = NoteForm()
-
-	if form.validate_on_submit():
-		note= Note(title=form.title.data, content=form.content.data, author=current_user)
-		db.session.add(note)
-		db.session.commit()
-		flash('Note added successfully!', category='success')
-		return redirect(url_for('profile'))
-	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	return render_template('my_note.html', image_file=img_file, form=form, legend = '')
-
 @app.route("/<int:post_id>")
 def post(post_id):
 	post =Post.query.get_or_404(post_id)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('post.html',  image_file=img_file, title=post.title, post=post)
 
-@app.route('/article/<int:article_id>')
+@app.route("/<int:article_id>")
 def article(article_id):
 	article =Article.query.get_or_404(article_id)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
@@ -359,7 +293,6 @@ def blog_home():
 	page = request.args.get('page', 1, type=int)
 	posts= Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	flash('Blogs are visible to all', category="success")
 	return render_template('blog_home.html', image_file=img_file, posts=posts)
 
 @app.route('/article_home', methods=['GET', 'POST'])
@@ -368,29 +301,7 @@ def article_home():
 	page = request.args.get('page', 1, type=int)
 	articles= Article.query.order_by(Article.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	flash('Articles are visible to all', category="success")
 	return render_template('article_home.html', image_file=img_file, articles=articles)
-
-@app.route('/journal_home', methods=['GET', 'POST'])
-@login_required
-def journal_home():
-	user = User.query.filter_by(username=current_user.username).first_or_404()
-	page = request.args.get('page', 1, type=int)
-	journals= Journal.query.filter_by(author=user).order_by(Journal.date_posted.desc()).paginate(page=page, per_page=5)
-	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	flash('journals are visible to only you', category='success')
-	return render_template('Journal_home.html', image_file=img_file, journals=journals)
-
-
-@app.route('/note_home', methods=['GET', 'POST'])
-@login_required
-def note_home():
-	user = User.query.filter_by(username=current_user.username).first_or_404()
-	page = request.args.get('page', 1, type=int)
-	notes= Note.query.filter_by(author=user).order_by(Note.date_posted.desc()).paginate(page=page, per_page=5)
-	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	flash('Only you can see these notes', category='success')
-	return render_template('note_home.html', image_file=img_file, notes=notes)
 
 @app.route('/logout')
 @login_required
@@ -398,20 +309,18 @@ def logout():
 	logout_user()
 	return redirect(url_for('index'))
 
-@app.route('/user/<string:username>')
+@app.route("/user/<string:username>")
 def user_post():
 	page = request.args.get('page', 1, type=int)
-	user = User.query.filter_by(username=username ).first_or_404()
+	user = User.query.filter_by(username=username).first_or_404()
 	posts= Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
 	if posts:
 		img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 		return render_template('user_post.html', image_file=img_file, posts=posts, user=user)
 
-'''
 	articles= Article.query.filter_by(author=user).order_by(Article.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('user_article.html', image_file=img_file, articles=articles, user=user)
-'''
 
 
 def send_reset_email(user):
@@ -422,9 +331,6 @@ def send_reset_email(user):
 	{url_for('reset_token', token=token, _external=True)}
 	lINK WILL EXPIRE IN 1 HOUR '''
 	mail.send( msg )
-
-
-
 
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_request():
