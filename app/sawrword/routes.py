@@ -100,43 +100,6 @@ def send_query_email(email, content):
 	msg = Message('Password Reset Request', sender='sawrword@gmail.com', recipients=sawrword@gmail.com)
 	mail.send( content )
 
-@app.route('/notepad', methods=['GET', 'POST'])
-@login_required
-def notepad():
-	#form for input notes
-	form = CommandToSendForm()
-	outputform = OutputForm()
-
-	command = ""
-
-	#parse button_input.xml
-	buttons = parse_buttons()
-	button_list = sorted(buttons.items())
-	if request.method == 'POST' :
-		if 'btn_template' in request.form:
-			command = read_command_template(request, buttons)
-			#set command into command box
-			form.command.data = command
-		if 'save' in request.form:
-			command = request.form['command'].encode('utf-8')
-
-		return render_template('notepad.html',
-    		                    command = command,
-    		                    buttons=buttons_list,
-    		                    form=form,
-    		                    output=output.xml,
-    		                    outputform=outputform)
-
-	return render_template('notepad.html', form=form,  outputform=outputform)
-
-def parse_buttons():
-	XMLtree = ET.parse('button_template/button_config.xml')
-	root = XMLtree.getroot()
-	button = {}
-	for button in root.findall('button'):
-		title = button.find('title')
-		button[0] = render_template
-	return button
 
 @app.route('/dashboard')
 @login_required
