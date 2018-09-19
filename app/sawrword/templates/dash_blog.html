@@ -40,21 +40,10 @@ Home
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Journals</a></li>
-            <li><a href="#">Books</a></li>
-            <li><a href="#">Documents</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href="">News</a></li>
-            <li><a href="">Article</a></li>
-            <li><a href="">Events</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href="">Subscriptions</a></li>
-            <li><a href="">Notifications</a></li>
+            <li class="active"><a href="{{ url_for('dashboard') }}">Overview<span class="sr-only">(current)</span></a></li>
+            <li><a href="{{url_for('subscriptions_home') }}">Subscriptions</a></li>
+            <li><a href="">Subscribers</a></li>
             <li><a href="">Messages</a></li>
-            <li><a href="">Contacts</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -73,27 +62,34 @@ Home
 
             <div class="col-xs-6 col-sm-3 placeholder">
               <img src="static/icons/dashjournal.jpg" width="100" height="100" class="img-responsive" alt="Generic placeholder thumbnail">
-              <a><h6>Journals</h6></a>
+              <a href={{ url_for('dash_journal') }}><h6>Journals</h6></a>
             </div>
 
             <div class="col-xs-6 col-sm-3 placeholder">
               <img src="static/icons/dashnotes.jpg" width="100" height="100" class="img-responsive" alt="Generic placeholder thumbnail">
-              <a><h6>Notes</h6></a>
+              <a href={{ url_for('dash_note') }}><h6>Notes</h6></a>
             </div>
+              <div class="row placeholders">
+             <h4 class="sub-header">Blogs</h4>
+          </div>
           </div>
         </div>
 
          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-       
+
           {% for post in posts.items %}
         <article class="media content-section">
           <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + post.author.image_file) }}" width="40" height="40">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="{{ url_for('user_post', username=post.author.firstname)}}">{{ post.author.firstname}}</a>
+              <a class="mr-2" href="{{ url_for('user', username=post.author.firstname)}}">{{ post.author.firstname}}</a>
               <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
-            <h4><a class="article-title" href="{{ url_for('post',post_id=post.id) }}">{{ post.title }}</a></h4>
+            <h4> <img src="static/icons/dashblog.jpg" width="20" height="20" class="img-responsive" alt="Generic placeholder thumbnail">
+            <a class="article-title" href="{{ url_for('post',post_id=post.id) }}">{{ post.title }}
+            </a></h4>
+
+
             <p class="article-content">{{ post.content }}</p>
           </div>
         </article>

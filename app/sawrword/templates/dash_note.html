@@ -1,7 +1,7 @@
 {% extends "bootstrap/base.html" %}
 
 {% block title %}
-Home
+Dash Notes
 {% endblock %}
 
 {% block styles %}
@@ -41,11 +41,10 @@ Home
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="{{ url_for('dashboard') }}">Overview<span class="sr-only">(current)</span></a></li>
-            <li><a href="{{ url_for('subscriptions_home') }}">Subscriptions</a></li>
+            <li><a href="{{url_for('subscriptions_home')}}">Subscriptions</a></li>
             <li><a href="">Subscribers</a></li>
             <li><a href="">Messages</a></li>
           </ul>
-
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h3 class="page-header">Welcome, {{ name }}</h3>
@@ -70,41 +69,41 @@ Home
               <img src="static/icons/dashnotes.jpg" width="100" height="100" class="img-responsive" alt="Generic placeholder thumbnail">
               <a href={{ url_for('dash_note') }}><h6>Notes</h6></a>
             </div>
-               <div class="row placeholders">
-             <h4 class="sub-header">Articles</h4>
+              <div class="row placeholders">
+             <h4 class="sub-header">Notes</h4>
           </div>
           </div>
         </div>
 
+
          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-          {% for article in articles.items %}
+          {% for note in notes.items %}
         <article class="media content-section">
-          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + article.author.image_file) }}" width="60" height="60">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + note.author.image_file) }}" width="60" height="60">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="{{ url_for('user', username=article.author.firstname)}}">{{ article.author.firstname}}</a>
-              <small class="text-muted">{{ article.date_posted.strftime('%Y-%m-%d') }}</small>
+              <a class="mr-2" href="{{ url_for('user_post', username=note.author.firstname)}}">{{ note.author.firstname}}</a>
+              <small class="text-muted">{{ note.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
-            <h4><img src="static/icons/dasharticle.jpg" width="20" height="20" class="img-responsive" alt="Generic placeholder thumbnail">
-                <a class="article-title" href="{{ url_for('article',article_id=article.id) }}">{{ article.title }}</a></h4>
-            <p class="article-content">{{ article.content }}</p>
+            <h4><a class="article-title" href="{{ url_for('note',note_id=note.id) }}">{{ note.title }}</a></h4>
+            <p class="article-content">{{ note.content }}</p>
           </div>
         </article>
        {% endfor %}
 
-          {% for page_num in articles.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+          {% for page_num in notes.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
       {% if page_num %}
-        {% if articles.page == page_num %}
-          <a class="btn btn-info mb-4" href="{{ url_for('article_home', page=page_num) }}">{{ page_num }}</a>
+        {% if notes.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('note_home', page=page_num) }}">{{ page_num }}</a>
         {% else %}
-          <a class="btn btn-outline-info mb-4" href="{{ url_for('article_home', page=page_num) }}">{{ page_num }}</a>
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('note_home', page=page_num) }}">{{ page_num }}</a>
         {% endif %}
       {% else %}
         ...
       {% endif %}
     {% endfor %}
-
+      {% include 'flash.html' %}
          <body>
 
 <div class="container">

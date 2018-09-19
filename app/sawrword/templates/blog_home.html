@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %}
- 
+
 {% block title %}
 Home
 {% endblock %}
@@ -62,7 +62,8 @@ Home
               <a class="mr-2" href="{{ url_for('user_post', username=post.author.firstname) }}">{{ post.author.firstname}}</a>
               <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
-            <h4><a class="article-title" href="{{ url_for('post',post_id=post.id) }}">{{ post.title }}</a></h4>
+            <h4><h4><img src="static/icons/dashblog.jpg" width="20" height="20" class="img-responsive" alt="Generic placeholder thumbnail">
+            <a class="article-title" href="{{ url_for('post',post_id=post.id) }}">{{ post.title }}</a></h4>
             <p class="article-content">{{ post.content }}</p>
           </div>
         </article>

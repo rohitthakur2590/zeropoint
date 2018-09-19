@@ -1,0 +1,18 @@
+<button_config>
+  <button>
+    <title>Get</title>
+    <template>Get.txt</template>
+  </button>
+  <button>
+    <title>Get-Config</title>
+    <template>Get_Config.txt</template>
+  </button>
+  <button>
+    <title>Create Subscription</title>
+    <template>Create_Subscription.txt</template>
+  </button>
+  <button>
+    <title>Subscribe</title>
+    <template>Subscribe.txt</template>
+  </button>
+</button_config>

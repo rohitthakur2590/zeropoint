@@ -3,9 +3,9 @@ import secrets
 from PIL import Image
 from flask import render_template, flash, request, redirect, url_for, abort
 from sawrword import app, db, mail
-from sawrword.models import User, Post, Article, Journal, Note
+from sawrword.models import User, Post, Article, Journal, Note, Subscription
 from sawrword.forms import (LoginForm, RegisterForm, UpdateProfileForm, CommandToSendForm,
-	                        OutputForm, PostForm, ArticleForm, JournalForm, NoteForm, 
+	                        OutputForm, PostForm, ArticleForm, JournalForm, NoteForm,
 	                        ContactForm, RequestResetForm, ResetPasswordForm)
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -100,6 +100,43 @@ def send_query_email(email, content):
 	msg = Message('Password Reset Request', sender='sawrword@gmail.com', recipients=sawrword@gmail.com)
 	mail.send( content )
 
+@app.route('/notepad', methods=['GET', 'POST'])
+@login_required
+def notepad():
+	#form for input notes
+	form = CommandToSendForm()
+	outputform = OutputForm()
+
+	command = ""
+
+	#parse button_input.xml
+	buttons = parse_buttons()
+	button_list = sorted(buttons.items())
+	if request.method == 'POST' :
+		if 'btn_template' in request.form:
+			command = read_command_template(request, buttons)
+			#set command into command box
+			form.command.data = command
+		if 'save' in request.form:
+			command = request.form['command'].encode('utf-8')
+
+		return render_template('notepad.html',
+    		                    command = command,
+    		                    buttons=buttons_list,
+    		                    form=form,
+    		                    output=output.xml,
+    		                    outputform=outputform)
+
+	return render_template('notepad.html', form=form,  outputform=outputform)
+
+def parse_buttons():
+	XMLtree = ET.parse('button_template/button_config.xml')
+	root = XMLtree.getroot()
+	button = {}
+	for button in root.findall('button'):
+		title = button.find('title')
+		button[0] = render_template
+	return button
 
 @app.route('/dashboard')
 @login_required
@@ -110,6 +147,24 @@ def dashboard():
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('dashboard.html', name=current_user.firstname, image_file=img_file, posts=posts, articles = articles)
 
+@app.route('/subscriptions_home')
+@login_required
+def subscriptions_home():
+	page = request.args.get('page', 1, type=int)
+	subscriptions= Subscription.query.order_by(Subscription.date_added.desc()).paginate(page=page, per_page=5)
+	posts= Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+	articles= Article.query.order_by(Article.date_posted.desc()).paginate(page=page, per_page=5)
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	if not subscriptions :
+		flash('You have no subscriptions!',category="warning")
+
+	return render_template('subscriptions_home.html', 
+		                   name=current_user.firstname,
+		                   image_file=img_file, 
+		                   posts=posts, 
+		                   articles = articles,
+		                   subscriptions=subscriptions)
+
 
 @app.route('/dash_blog')
 @login_required
@@ -118,6 +173,28 @@ def dash_blog():
 	posts= Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
 	return render_template('dash_blog.html', name=current_user.firstname, image_file=img_file, posts=posts)
+
+@app.route('/dash_note')
+@login_required
+def dash_note():
+	page = request.args.get('page', 1, type=int)
+	notes= Note.query.order_by(Note.date_posted.desc()).paginate(page=page, per_page=5)
+	if not notes.items:
+	    flash("You don't have any note entry", category='warning')
+	    flash("Notes are private and only you can view them ", category='success')
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('dash_note.html', name=current_user.firstname, image_file=img_file, notes=notes)
+
+@app.route('/dash_journal')
+@login_required
+def dash_journal():
+	page = request.args.get('page', 1, type=int)
+	journals= Journal.query.order_by(Journal.date_posted.desc()).paginate(page=page, per_page=5)
+	if not journals.items:
+	    flash("You don't have any journal entry", category='warning')
+	    flash("Journal is private and only you can view it ", category='success')
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('dash_journal.html', name=current_user.firstname, image_file=img_file, journals=journals)
 
 @app.route('/dash_article')
 @login_required
@@ -271,8 +348,22 @@ def update_post(post_id):
 	return render_template('update_post.html', image_file=img_file, form=form,
 		legend = 'Update Post')
 
+@app.route("/subscribe/<string:username>", methods=['GET', 'POST'])
+@login_required
+def subscribe(username):
+	subscribed_user = User.query.filter_by(username=username).first_or_404()
+	img_file = url_for('static', filename='display_pics/' + subscribed_user.image_file)
+	new_subscription = Subscription(firstname=subscribed_user.firstname,
+ 			            lastname=subscribed_user.lastname,
+ 			            username=subscribed_user.username,
+ 			            image_file=img_file)
+	
+	db.session.add(subscribed_user)
+	db.session.commit()
+	flash('Successfully added to subscriptions !', category='success')
+	return redirect(url_for('subscriptions_home'))
 
-@app.route("/<int:article_id>/update", methods=['GET', 'POST'])
+@app.route("/update_article/<int:article_id>", methods=['GET', 'POST'])
 @login_required
 def update_article(article_id):
 	article =Article.query.get_or_404(article_id)
@@ -341,8 +432,8 @@ def journal_home():
 	page = request.args.get('page', 1, type=int)
 	journals= Journal.query.filter_by(author=user).order_by(Journal.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	flash('journals are visible to only you', category='success')
-	return render_template('Journal_home.html', image_file=img_file, journals=journals)
+	flash("Journal is private and only you can view it ", category='success')
+	return render_template('journal_home.html', image_file=img_file, journals=journals)
 
 
 @app.route('/note_home', methods=['GET', 'POST'])
@@ -352,7 +443,7 @@ def note_home():
 	page = request.args.get('page', 1, type=int)
 	notes= Note.query.filter_by(author=user).order_by(Note.date_posted.desc()).paginate(page=page, per_page=5)
 	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-	flash('Only you can see these notes', category='success')
+	flash("Notes are private and only you can view them ", category='success')
 	return render_template('note_home.html', image_file=img_file, notes=notes)
 
 @app.route('/logout')
@@ -360,15 +451,30 @@ def note_home():
 def logout():
 	logout_user()
 	return redirect(url_for('index'))
+'''
+@app.route("/<int:post_id>")
+def post(post_id):
+	post =Post.query.get_or_404(post_id)
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('post.html',  image_file=img_file, title=post.title, post=post)
+'''
+@app.route("/<string:username>")
+def user(username):
+	page = request.args.get('page', 1, type=int)
+	user = User.query.filter_by(firstname=username).first_or_404()
+	posts= Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+	articles= Article.query.filter_by(author=user).order_by(Article.date_posted.desc()).paginate(page=page, per_page=5)
+	img_file = url_for('static', filename='display_pics/' + user.image_file)
+	return render_template('user.html', name=user.firstname,username=user.username, image_file=img_file, posts=posts, articles = articles)
 
-@app.route('/user/<string:username>')
+
+@app.route("/user_post/<string:username>")
 def user_post():
 	page = request.args.get('page', 1, type=int)
-	user = User.query.filter_by(username=username ).first_or_404()
+	user = User.query.filter_by(firstname=username ).first_or_404()
 	posts= Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
-	if posts:
-		img_file = url_for('static', filename='display_pics/' + current_user.image_file)
-		return render_template('user_post.html', image_file=img_file, posts=posts, user=user)
+	img_file = url_for('static', filename='display_pics/' + current_user.image_file)
+	return render_template('user_post.html', image_file=img_file, posts=posts, user=user)
 
 '''
 	articles= Article.query.filter_by(author=user).order_by(Article.date_posted.desc()).paginate(page=page, per_page=5)

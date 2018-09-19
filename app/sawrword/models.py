@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
 	articles = db.relationship('Article', backref='author', lazy=True)
 	journals = db.relationship('Journal', backref='author', lazy=True)
 	notes  = db.relationship('Note', backref='author', lazy=True)
+	subscriptions = db.relationship('Subscription', backref='author', lazy=True)
 
 
 
@@ -63,3 +64,13 @@ class Note(UserMixin, db.Model):
 	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	content = db.Column(db.Text, nullable=False)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
+
+class Subscription(UserMixin, db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	firstname = db.Column(db.String(20))
+	lastname = db.Column(db.String(20))
+	username = db.Column(db.String(50), unique=True)
+	image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+	date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
+  
