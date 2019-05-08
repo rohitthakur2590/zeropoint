@@ -1,0 +1,87 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+Article_Home
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='dashboard.css')}}">
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+            <li><a href="{{ url_for('profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="{{ url_for('profile') }}">Profile<span class="sr-only">(current)</span></a></li>
+            <li><a href="{{ url_for('my_article') }}">Create New</a></li>
+            <!--
+            <li><a href="#">Followers</a></li>
+            <li><a href="#">Follow</a></li>
+            <li><a href="#">Latest Articles</a></li>
+            <-->
+          </ul>
+
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">{{ name }}</h1>
+         </body>
+
+
+
+          {% for article in articles.items %}
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + article.author.image_file) }}" width="60" height="60">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('user_post', username=article.author.firstname)}}">{{ article.author.firstname}}</a>
+              <small class="text-muted">{{ article.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h4><a class="article-title" href="{{ url_for('article',article_id=article.id) }}">{{ article.title }}</a></h4>
+            <p class="article-content">{{ article.content }}</p>
+          </div>
+        </article>
+       {% endfor %}
+
+          {% for page_num in articles.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if articles.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('article_home', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('article_home', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+         <body>
+
+<div class="container">
+
+ {% include 'flash.html' %}
+{% endblock %}

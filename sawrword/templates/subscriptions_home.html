@@ -1,0 +1,99 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+Subscriptions Home
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='dashboard.css')}}">
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+            <li><a href="{{ url_for('profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+            <li><a href="{{ url_for('subscribers_home') }}">Subscribers</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h4 class="page-header">Active Subscriptions</h4>
+
+          <div class="row placeholders">
+              {% include 'flash.html' %}
+
+          </div>
+     {% for subscription in subscriptions.items  %}
+
+        <div class="col-xs-8 col-sm-2 placeholder">
+            <img class="rounded-circle article-img" src="{{ subscription.image_file }}" width="80" height="80">
+            <div>
+            <a class="mr-4" href="{{ url_for('user', username=subscription.firstname)}}">{{ subscription.firstname}}</a>
+        </div></div>
+
+     {% endfor %}
+
+        </div>
+
+         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <div class="row placeholders">
+          <h4 class="sub-header">Recommended</h4>
+          </div>
+        {% for post in posts.items %}
+          {% if (post.author.username != uname) %}
+        <div class="col-xs-6 col-sm-3 placeholder">
+            <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + post.author.image_file) }}" width="60" height="60">
+            <div>
+            <a class="mr-2" href="{{ url_for('user', username=post.author.firstname)}}">{{ post.author.firstname}}</a>
+            <br><a class="article-title" href="{{ url_for('post',post_id=post.id) }}">{{ post.title }}</a>
+        </div></div>
+          {% endif %}
+       {% endfor %}
+
+
+        {% for article in articles.items %}
+         {% if (article.author.username != uname) %}
+        <div class="col-xs-6 col-sm-3 placeholder">
+            <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + article.author.image_file) }}" width="60" height="60">
+            <div>
+            <a class="mr-2" href="{{ url_for('user', username=article.author.firstname)}}">{{ article.author.firstname}}</a>
+            <br><a class="article-title" href="{{ url_for('article',article_id=article.id) }}">{{ article.title }}</a></h4>
+        </div></div>
+         {% endif %}
+       {% endfor %}
+    <br>
+
+         <body>
+
+<div class="container">
+
+        </div>
+      </div>
+    </div>
+{% endblock %}

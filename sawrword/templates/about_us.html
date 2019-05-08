@@ -1,0 +1,67 @@
+
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+About_Us
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='about_us.css')}}">
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="{{url_for('about_us') }}">About</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            <li><a href="{{ url_for('contact_us')}}">Contact Us</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Company<span class="sr-only">(current)</span></a></li>
+            <li><a href="{{ url_for('terms') }}">Terms</a></li>
+
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">{{ name }}</h1>
+
+          <div class="row placeholders">
+          <h2 class="sub-header">About Us</h2>
+          <br><br>
+           <div class = "d">
+            <h5>
+Rohit Thakur is the founder of sawrword, a community of people who loves to read write and
+share knowledge and information .He is responsible for the sawrword's overall vision
+and strategy as everyday operations.sawrword has focused on simplicity and inspiring creativity
+through solving problems with thoughtful product design. As a result, sawrword has become the
+platform for writing blogs, articles , news and day to day journal for everyone from celebrities, newsrooms
+and brands, to teens, writers and anyone with a passion or purpose for creating world with knowledge and imagination.
+           </h5>
+          </div>
+        </div>
+      </div>
+    </div>
+{% include 'flash.html' %}
+{% endblock %}

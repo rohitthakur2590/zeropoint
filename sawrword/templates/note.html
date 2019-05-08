@@ -1,0 +1,91 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+Note
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='dashboard.css')}}">
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+            <li><a href="{{ url_for('profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="{{url_for('blog_home')}}">Blog<span class="sr-only">(current)</span></a></li>
+            <li><a href="{{ url_for('update_note',note_id=note.id)}}">Edit</a></li>
+            <li><a href="#">Delete</a></li>
+          </ul>
+
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">{{ name }}</h1>
+         </body>
+
+          <article class="media content section">
+
+           <div class="media-body">
+            <div class="article-metadata">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + note.author.image_file) }}" width="60" height="60">
+            {% if note.author == current_user %}
+          <div>
+            <a <button type="button" class="btn btn-success btn-sm mt-1 mb-1" href="{{ url_for('update_note', note_id=note.id) }}">Update</a>
+            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+          </div>
+          {% endif %}
+           <h2 class="article-title">{{ note.title }} </h2>
+           <p class="article-content">By {{ note.author.firstname }} on {{ note.date_posted }} </p>
+           <p class="article-content">{{ note.content }} </p>
+         </div>
+          </article>
+
+         <body>
+
+<div class="container">
+ <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Note ?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <form action="{{url_for('delete_note', note_id = note.id)}}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% include 'flash.html' %}
+{% endblock %}

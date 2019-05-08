@@ -1,0 +1,110 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+Forums
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='dashboard.css')}}">
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('forums') }}">Forums</a></li>
+                <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="page-header">Create a post on sawrword forum</h3>
+
+    <form class="form-signin" method="POST" action="/forums">
+        <legend class="border-bottom mb-4">{{ legend }}</legend>
+        {{ form.hidden_tag() }}
+        <div style = "width: 80%">
+            {{ wtf.form_field(form.content, rows = '2', color = '#E1EC9B') }}
+        </div>
+        <div style ="width: 10%"  align="center">
+            <button class="btn btn-xs  btn-primary btn-block" type="submit">Post</button>
+        </div>
+    </form>
+
+    {% for forum in forums.items %}
+    <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ forum.image_file}}" width="25" height="25">
+        <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('user', username=forum.firstname)}}">{{ forum.firstname}}</a>
+              <small class="text-muted">{{ forum.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <p class="article-content">{{ forum.content }}</p>
+              <div style = "width: 60%">
+            {{ wtf.form_field(form.content, rows = '1', color = '#E1EC9B') }}
+           </div>
+            <div style ="width: 10%"  align="left">
+            <button class="btn btn-xs  btn-info btn-block" type="submit">Reply</button>
+            </div>
+            <!-- Reply Button Added here
+             <form class="form-signin" method="POST" action="/forums">
+        <legend class="border-bottom mb-4">{{ legend }}</legend>
+        {{ form.hidden_tag() }}
+        <div style = "width: 80%">
+            {{ wtf.form_field(form.content, rows = '2', color = '#E1EC9B') }}
+        </div>
+        <div style ="width: 10%"  align="center">
+            <button class="btn btn-xs  btn-primary btn-block" type="submit">Reply</button>
+        </div>
+       </form>
+        <-->
+
+
+        </div>
+    </article>
+    {% endfor %}
+
+
+      {% for page_num in forums.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if forums.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('forums', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('forums', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+         <body>
+</div>
+</div>
+<body>
+
+<div class="container">
+
+</div>
+</div>
+</div>
+{% include 'flash.html' %}
+{% endblock %}

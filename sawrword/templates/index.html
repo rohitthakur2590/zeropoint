@@ -1,0 +1,198 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+sawrword
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('index') }}">sawrword</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{{url_for('about_us') }}">About</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            <li><a href="{{ url_for('contact_us') }}">Contact Us</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+ <div>
+              <img src="static/icons/cover3.jpg" width="100%" height="130">
+</div>
+    <div class="container">
+      <div class="a">
+<h2>Built for maven and autodidact</h2>
+<p class="lead">
+sawrword is a platform inspired by the way you learn,
+share and enhance the knowledge and imagination, you can
+write your blogs, articles, journals, spread news and share thoughts
+so that you can contribute to the intelligent and well informed and make a difference.</p>
+</div>
+</div><!-- /.container -->
+
+<br><br><br>
+
+   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="static/icons/about1.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="static/icons/about6.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
+            </div>
+               <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="static/icons/about3.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
+            </div>
+
+               <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="static/icons/about5.jpg" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
+            </div>
+             </div>
+        </div>
+        </div>
+        {% include 'flash.html' %}
+        <br><br><br>
+        <br><br>
+        <br><br><br>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="row placeholders">
+        <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="static/icons/indexwrite.jpg" width="70" height="70" class="img-responsive" alt="Generic placeholder thumbnail">
+        </div>
+            <div class="a">
+               Words can shape experience, feelings into something another person can read and understand and
+               makes your thinking visible.sawrword is an platform  in which writing empowers us.
+              </div>
+        </div>
+        </div>
+        <br><br><br>
+        <br><br>
+        <br><br>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="row placeholders">
+        <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="static/icons/indexearth.jpg" width="70" height="70" class="img-responsive" alt="Generic placeholder thumbnail">
+        </div>
+            <div class="a">
+               Imagination ignites passion and purpose, Our imagination and thoughts create our image and builds
+               our future which stimulates creativity and innovation.
+            </div>
+         </div>
+      </div>
+
+        <br><br><br>
+        <br><br>
+        <br><br>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="row placeholders">
+        <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="static/icons/indexcommunication.jpg" width="70" height="70" class="img-responsive" alt="Generic placeholder thumbnail">
+        </div>
+            <div class="a">
+               Communication spread knowledge and information among people.
+               Undoubtedly, the sharing knowledge and information process cannot function without communication.
+             </div>
+        </div>
+      </div>
+
+       <br><br><br>
+        <br><br>
+        <br><br>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="row placeholders">
+        <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="static/icons/indexmind.jpg" width="70" height="70" class="img-responsive" alt="Generic placeholder thumbnail">
+        </div>
+            <div class="a">
+               It is our capacity for thinking that defines us as human and sets us apart from the all other living organisms.
+               Thinking is how we connect with reality, it is our primary cognitive tool. It couldn’t get more essential than that
+
+             </div>
+        </div>
+      </div>
+
+
+
+<br><br>
+<br> <br>
+
+    <div class="col-sm-4 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {% for post in posts.items %}
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + post.author.image_file) }}" width="40" height="40">
+          <div class="media-body" >
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('user', username=post.author.firstname)}}">{{ post.author.firstname}}</a>
+              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+
+
+            <img src="static/icons/dashblog.jpg" width="20" height="20" class="img-responsive" alt="Generic placeholder thumbnail">
+                <h4><a class="article-title"  href="{{ url_for('post',post_id=post.id) }}">{{ post.title }}</a></h4>
+
+
+           <h5> <p class="article-content" style="white-space: pre-wrap; font-family: Tahoma; background-color: #f0f0f0;">{{ post.content }}</p><h5>
+          </div>
+        </article>
+       {% endfor %}
+
+          {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if posts.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('blog_home', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('blog_home', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+
+
+
+          {% for article in articles.items %}
+        <article class="media content-section" >
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='display_pics/' + article.author.image_file) }}" width="40" height="40">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('user', username=article.author.firstname)}}">{{ article.author.firstname}}</a>
+              <small class="text-muted">{{ article.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h4><img src="static/icons/dasharticle.jpg" width="20" height="20" class="img-responsive" alt="Generic placeholder thumbnail">
+            <a class="article-title" href="{{ url_for('article',article_id=article.id) }}">{{ article.title }}</a></h4>
+            <h5><p class="article-content"  style="white-space: pre-wrap; background-color: #f0f0f0;">{{ article.content }}</p></h5>
+          </div>
+        </article>
+       {% endfor %}
+
+          {% for page_num in articles.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if articles.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('article_home', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('article_home', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+    </div>
+
+
+{% endblock %}
